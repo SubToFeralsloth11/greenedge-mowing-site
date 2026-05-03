@@ -1,0 +1,760 @@
+<!doctype html>
+<html lang="en" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Join the GreenEdge Crew - Earn up to $70 a week with flexible lawn mowing work in Ashgrove, The Gap and Bardon.">
+  <meta property="og:title" content="Join the Crew - GreenEdge Mowing">
+  <meta property="og:description" content="Earn up to $70 a week with flexible lawn mowing work. Apply now.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="GREENEDGE%20LOGO.png">
+  <link rel="icon" type="image/png" href="GREENEDGE%20LOGO.png">
+  <title>Join the Crew - GreenEdge Mowing</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&amp;family=DM+Sans:wght@400;500&amp;display=swap" rel="stylesheet">
+  <style>
+   * { box-sizing: border-box; }
+   :root {
+    --green-50: #f0fdf4;
+    --green-100: #dcfce7;
+    --green-200: #bbf7d0;
+    --green-400: #4ade80;
+    --green-600: #16a34a;
+    --green-700: #15803d;
+    --green-800: #166534;
+    --green-900: #14532d;
+    --ink-700: #374151;
+    --ink-500: #6b7280;
+    --panel-shadow: 0 22px 55px rgba(21, 128, 61, 0.12);
+    --panel-shadow-strong: 0 28px 70px rgba(15, 23, 42, 0.16);
+    --button-shadow: 0 16px 30px rgba(21, 128, 61, 0.18);
+   }
+   html {
+    height: 100%;
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+   }
+   body {
+    min-height: 100%;
+    margin: 0;
+    overflow-x: hidden;
+    background-color: #f0fdf4;
+    color: var(--ink-700);
+    -webkit-font-smoothing: antialiased;
+   }
+   ::selection {
+    background: rgba(74, 222, 128, 0.25);
+    color: var(--green-900);
+   }
+   .font-heading { font-family: 'Sora', sans-serif; }
+   .font-body { font-family: 'DM Sans', sans-serif; }
+   .page-shell {
+    position: relative;
+    width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+    isolation: isolate;
+   }
+   .page-canvas {
+    position: relative;
+    min-height: 100%;
+    background:
+     radial-gradient(circle at top, rgba(255, 255, 255, 0.92), transparent 34%),
+     linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(240, 253, 244, 0.92) 24%, rgba(236, 253, 245, 1) 100%);
+   }
+   .page-canvas::before,
+   .page-canvas::after {
+    content: "";
+    position: absolute;
+    inset: auto;
+    border-radius: 999px;
+    pointer-events: none;
+    filter: blur(10px);
+    opacity: 0.55;
+   }
+   .page-canvas::before {
+    top: 110px;
+    right: min(6vw, 56px);
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle, rgba(134, 239, 172, 0.42) 0%, rgba(134, 239, 172, 0) 72%);
+   }
+   .page-canvas::after {
+    top: 420px;
+    left: min(4vw, 40px);
+    width: 220px;
+    height: 220px;
+    background: radial-gradient(circle, rgba(187, 247, 208, 0.4) 0%, rgba(187, 247, 208, 0) 72%);
+   }
+   .grass-pattern {
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 50 Q12 35 10 20 Q8 35 10 50' fill='%2322c55e' opacity='0.1'/%3E%3Cpath d='M30 55 Q32 40 30 25 Q28 40 30 55' fill='%2322c55e' opacity='0.08'/%3E%3Cpath d='M50 50 Q52 35 50 20 Q48 35 50 50' fill='%2322c55e' opacity='0.1'/%3E%3C/svg%3E");
+   }
+   .card-hover {
+    position: relative;
+    overflow: hidden;
+    border-color: transparent;
+    box-shadow: var(--panel-shadow);
+    transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+   }
+   .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 28px 65px rgba(21, 128, 61, 0.16);
+   }
+   .ui-action {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    transform: translateZ(0);
+    box-shadow: var(--button-shadow);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.2s ease, filter 0.25s ease;
+   }
+   .ui-action:hover,
+   .ui-action:focus-visible {
+    box-shadow: 0 22px 38px rgba(21, 128, 61, 0.16);
+    filter: saturate(1.02);
+   }
+   .ui-action:active {
+    transform: translateY(1px) scale(0.99);
+   }
+   .ui-action:focus-visible {
+    outline: 3px solid rgba(134, 239, 172, 0.55);
+    outline-offset: 3px;
+   }
+   .ui-action::after {
+    content: "";
+    position: absolute;
+    left: -25%;
+    top: 0;
+    bottom: 0;
+    width: 45%;
+    border-radius: 1.25rem;
+    background:
+     linear-gradient(115deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.18) 42%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0.1) 58%, rgba(255, 255, 255, 0) 100%);
+    opacity: 0;
+    transform: translateX(-10%) skewX(-18deg);
+    transition: opacity 0.24s ease, transform 0.5s ease;
+    pointer-events: none;
+    z-index: 0;
+   }
+   .ui-action:hover::after,
+   .ui-action:focus-visible::after {
+    opacity: 1;
+    transform: translateX(210%) skewX(-18deg);
+   }
+   .form-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e5e7eb;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--ink-700);
+    background: #ffffff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+   }
+   .form-input:focus {
+    outline: none;
+    border-color: var(--green-400);
+    box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.2);
+   }
+   .form-input::placeholder {
+    color: #9ca3af;
+   }
+   .form-label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ink-700);
+   }
+   .form-group {
+    margin-bottom: 1.25rem;
+   }
+   .checkbox-group {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+   }
+   .checkbox-group input[type="checkbox"] {
+    width: 1.15rem;
+    height: 1.15rem;
+    margin-top: 0.15rem;
+    accent-color: var(--green-600);
+    cursor: pointer;
+    flex-shrink: 0;
+   }
+   .checkbox-group label {
+    font-size: 0.95rem;
+    color: var(--ink-700);
+    cursor: pointer;
+    line-height: 1.4;
+   }
+   .checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+   }
+   @media (min-width: 640px) {
+    .checkbox-grid {
+     grid-template-columns: repeat(4, 1fr);
+    }
+   }
+   .error-message {
+    display: none;
+    margin-top: 0.35rem;
+    font-size: 0.85rem;
+    color: #dc2626;
+   }
+   .error-message.is-visible {
+    display: block;
+   }
+   .form-input.is-invalid {
+    border-color: #dc2626;
+   }
+   .form-input.is-invalid:focus {
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
+   }
+   .success-panel {
+    display: none;
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+   }
+   .success-panel.is-visible {
+    display: block;
+   }
+   .form-panel.is-hidden {
+    display: none;
+   }
+   .terms-box {
+    max-height: 220px;
+    overflow-y: auto;
+    padding: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    background: #fafafa;
+    font-size: 0.9rem;
+    line-height: 1.6;
+   }
+   .terms-box h4 {
+    margin: 0 0 0.5rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--green-800);
+   }
+   .terms-box ol {
+    margin: 0;
+    padding-left: 1.25rem;
+   }
+   .terms-box li {
+    margin-bottom: 0.5rem;
+    color: var(--ink-700);
+   }
+   .disclaimer-text {
+    font-size: 0.7rem;
+    color: var(--ink-500);
+    text-align: center;
+    margin-top: 1.5rem;
+   }
+   .headline-badge {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    background: var(--green-100);
+    color: var(--green-800);
+    margin-bottom: 1rem;
+   }
+
+   /* Modal */
+   .modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    background: rgba(15, 23, 42, 0.62);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+   }
+   .modal-overlay.is-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+   }
+   .modal-panel {
+    width: min(480px, 100%);
+    padding: 2rem;
+    border-radius: 1.5rem;
+    background: #ffffff;
+    box-shadow: 0 30px 80px rgba(15, 23, 42, 0.28);
+    transform: translateY(12px) scale(0.98);
+    transition: transform 0.25s ease;
+   }
+   .modal-overlay.is-visible .modal-panel {
+    transform: translateY(0) scale(1);
+   }
+   .modal-buttons {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+   }
+   .modal-buttons .ui-action {
+    flex: 1;
+    padding: 0.85rem 1.5rem;
+    border-radius: 999px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    text-align: center;
+    text-decoration: none;
+   }
+   .modal-decline {
+    background: #f3f4f6;
+    color: #374151;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+   }
+   .modal-decline:hover {
+    background: #e5e7eb;
+   }
+
+   /* Loading spinner inside button */
+   .button-spinner {
+    display: none;
+    width: 1.15rem;
+    height: 1.15rem;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: #ffffff;
+    border-radius: 999px;
+    animation: spin 0.7s linear infinite;
+    margin-right: 0.5rem;
+   }
+   .is-loading .button-spinner {
+    display: inline-block;
+   }
+   .is-loading .button-text {
+    display: inline-block;
+   }
+   .is-loading {
+    pointer-events: none;
+    opacity: 0.85;
+   }
+
+   @keyframes spin {
+    to { transform: rotate(360deg); }
+   }
+
+   /* Thank you animation */
+   .thankyou-scene {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 3rem 1.5rem;
+    min-height: 60vh;
+   }
+   .thankyou-scene.is-visible {
+    display: flex;
+   }
+   .thankyou-circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 999px;
+    background: linear-gradient(160deg, var(--green-800), var(--green-600));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 16px 40px rgba(21, 128, 61, 0.28);
+    animation: thankyou-pulse 2.2s ease-in-out infinite;
+   }
+   .thankyou-check {
+    width: 48px;
+    height: 48px;
+    stroke: #ffffff;
+    stroke-width: 3.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+   }
+   .thankyou-check path {
+    stroke-dasharray: 60;
+    stroke-dashoffset: 60;
+    animation: draw-check 0.8s ease forwards;
+   }
+   @keyframes draw-check {
+    to { stroke-dashoffset: 0; }
+   }
+   @keyframes thankyou-pulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 16px 40px rgba(21, 128, 61, 0.28); }
+    50% { transform: scale(1.06); box-shadow: 0 20px 50px rgba(21, 128, 61, 0.38); }
+   }
+   .floating-grass {
+    position: absolute;
+    width: 8px;
+    height: 18px;
+    border-radius: 999px 999px 0 0;
+    background: linear-gradient(180deg, #22c55e, #15803d);
+    opacity: 0.35;
+    animation: float-grass 3.5s ease-in-out infinite;
+   }
+   .fg-1 { left: 15%; top: 20%; animation-delay: 0s; --r: -8deg; }
+   .fg-2 { right: 18%; top: 25%; animation-delay: -1.2s; --r: 6deg; height: 14px; }
+   .fg-3 { left: 22%; bottom: 22%; animation-delay: -2.4s; --r: 4deg; height: 16px; }
+   .fg-4 { right: 14%; bottom: 18%; animation-delay: -0.8s; --r: -5deg; height: 20px; }
+   .fg-5 { left: 50%; top: 12%; animation-delay: -1.8s; --r: 3deg; height: 12px; opacity: 0.25; }
+   @keyframes float-grass {
+    0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)); }
+    50% { transform: translateY(-10px) rotate(var(--r, 0deg)); }
+   }
+
+   @media (max-width: 640px) {
+    .checkbox-grid {
+     grid-template-columns: repeat(2, 1fr);
+    }
+    .modal-buttons {
+     flex-direction: column;
+    }
+   }
+  </style>
+ </head>
+ <body class="h-full font-body">
+  <div class="page-shell w-full min-h-full">
+   <div class="page-canvas min-h-full grass-pattern" style="background-color: #f0fdf4;">
+
+    <!-- Location Confirmation Modal -->
+    <div id="location-modal" class="modal-overlay" aria-hidden="true">
+     <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <h3 id="modal-title" class="font-heading font-bold text-xl mb-3" style="color: #166534;">Area Check</h3>
+      <p class="text-base leading-relaxed" style="color: #374151;">We currently mow in <strong>Ashgrove</strong>, <strong>The Gap</strong>, and <strong>Bardon</strong>. Do you have access to these areas?</p>
+      <div class="modal-buttons">
+       <button type="button" id="modal-no" class="ui-action modal-decline">No</button>
+       <button type="button" id="modal-yes" class="ui-action" style="background-color: #166534; color: #ffffff;">Yes</button>
+      </div>
+      <p id="modal-decline-msg" class="error-message is-visible" style="margin-top: 1rem; text-align: center;">Sorry, you must have access to these areas to join the GreenEdge Crew.</p>
+     </div>
+    </div>
+
+     <section class="px-6 py-12 md:py-20 max-w-4xl mx-auto">
+      <div class="text-center max-w-2xl mx-auto mb-10">
+       <div style="width: 56px; height: 56px; border-radius: 50%; overflow: hidden; display: inline-block; margin-bottom: 0.75rem;">
+        <img src="GREENEDGE%20LOGO.png" alt="GreenEdge" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+       </div>
+       <span class="headline-badge">Join the Team</span>
+       <h1 class="font-heading font-bold text-3xl md:text-5xl leading-tight mb-4" style="color: #166534;">Want to join? Get up to $70* a week!</h1>
+      <p class="text-lg md:text-xl" style="color: #6b7280;">We are always looking for motivated locals to join the GreenEdge Crew. Fill in the form below and we will be in touch.</p>
+     </div>
+
+     <!-- Form Card -->
+     <div id="form-card" class="bg-white rounded-2xl p-6 md:p-10 card-hover relative" style="border: 2px solid #dcfce7;">
+      <div id="signup-form-panel" class="form-panel">
+       <form id="crew-signup-form" novalidate>
+        <div class="grid md:grid-cols-2 gap-x-6">
+         <div class="form-group">
+          <label for="fullName" class="form-label">Full Name <span style="color: #dc2626;">*</span></label>
+          <input type="text" id="fullName" name="fullName" class="form-input" placeholder="Enter your full name" required>
+          <p class="error-message" id="error-fullName">Please enter your full name.</p>
+         </div>
+         <div class="form-group">
+          <label for="email" class="form-label">Email Address <span style="color: #dc2626;">*</span></label>
+          <input type="email" id="email" name="email" class="form-input" placeholder="your.email@example.com" required>
+          <p class="error-message" id="error-email">Please enter a valid email address.</p>
+         </div>
+         <div class="form-group">
+          <label for="age" class="form-label">Age <span style="color: #dc2626;">*</span></label>
+          <input type="number" id="age" name="age" class="form-input" placeholder="Enter your age" min="10" max="99" required>
+          <p class="error-message" id="error-age">You must be at least 10 years old to join the GreenEdge Crew.</p>
+         </div>
+         <div class="form-group">
+          <label for="suburb" class="form-label">Suburb / Area <span style="color: #dc2626;">*</span></label>
+          <input type="text" id="suburb" name="suburb" class="form-input" placeholder="Which suburb or area do you live in?" required>
+          <p class="error-message" id="error-suburb">Please enter your suburb or area.</p>
+         </div>
+        </div>
+
+        <div class="form-group">
+         <label class="form-label">Availability <span style="color: #dc2626;">*</span></label>
+         <p class="text-sm mb-2" style="color: #6b7280;">Select the days you are generally available to work.</p>
+         <div class="checkbox-grid">
+          <div class="checkbox-group">
+           <input type="checkbox" id="day-mon" name="availability" value="Monday">
+           <label for="day-mon">Monday</label>
+          </div>
+          <div class="checkbox-group">
+           <input type="checkbox" id="day-tue" name="availability" value="Tuesday">
+           <label for="day-tue">Tuesday</label>
+          </div>
+          <div class="checkbox-group">
+           <input type="checkbox" id="day-wed" name="availability" value="Wednesday">
+           <label for="day-wed">Wednesday</label>
+          </div>
+          <div class="checkbox-group">
+           <input type="checkbox" id="day-thu" name="availability" value="Thursday">
+           <label for="day-thu">Thursday</label>
+          </div>
+          <div class="checkbox-group">
+           <input type="checkbox" id="day-fri" name="availability" value="Friday">
+           <label for="day-fri">Friday</label>
+          </div>
+          <div class="checkbox-group">
+           <input type="checkbox" id="day-sat" name="availability" value="Saturday">
+           <label for="day-sat">Saturday</label>
+          </div>
+          <div class="checkbox-group">
+           <input type="checkbox" id="day-sun" name="availability" value="Sunday">
+           <label for="day-sun">Sunday</label>
+          </div>
+         </div>
+         <p class="error-message" id="error-availability">Please select at least one day you are available.</p>
+        </div>
+
+        <div class="form-group">
+         <label for="experience" class="form-label">Prior Experience (Optional)</label>
+         <textarea id="experience" name="experience" class="form-input" rows="3" placeholder="Briefly describe any prior mowing, gardening, or outdoor work experience you have."></textarea>
+        </div>
+
+        <div class="form-group">
+         <label for="reason" class="form-label">Why do you want to join? <span style="color: #dc2626;">*</span></label>
+         <textarea id="reason" name="reason" class="form-input" rows="3" placeholder="Tell us a bit about yourself and why you would like to join the GreenEdge Crew." required></textarea>
+         <p class="error-message" id="error-reason">Please tell us why you want to join.</p>
+        </div>
+
+         <div class="form-group">
+          <label class="form-label">Crew Terms &amp; Conditions <span style="color: #dc2626;">*</span></label>
+          <div class="terms-box mb-3">
+           <h4>GreenEdge Crew Member Terms and Conditions</h4>
+           <ol>
+            <li><strong>Reliability:</strong> I will show up on time for scheduled jobs and communicate any delays or cancellations with at least 24 hours notice. Repeated no-shows may result in removal from the crew.</li>
+            <li><strong>Professional conduct:</strong> I will represent GreenEdge Mowing professionally and treat all customers, crew members, and members of the public with respect and courtesy at all times.</li>
+            <li><strong>Safety and personal risk:</strong> I understand that lawn mowing and outdoor work involves inherent risks, including but not limited to exposure to machinery, heat, insects, uneven terrain, and allergens. I agree to follow all safety guidelines and use provided personal protective equipment. I acknowledge that I am responsible for my own safety and that GreenEdge Mowing is not liable for any personal injury, illness, or accident that occurs before, during, or after a job, except where caused by gross negligence.</li>
+            <li><strong>Property respect and damage:</strong> I will respect customer property and privacy at all times. I understand that any damage I cause to customer property through negligence or reckless behaviour is my financial responsibility. I agree to report any accidental damage to the team immediately.</li>
+            <li><strong>Casual employment nature:</strong> I understand that my engagement with GreenEdge Mowing is on a casual, contractor-style basis. There is no guarantee of ongoing work, minimum hours, or regular shifts. Work is allocated based on customer demand and my availability.</li>
+            <li><strong>Equipment care and damage liability:</strong> I will take reasonable care of all equipment, tools, and vehicles provided by GreenEdge Mowing. I agree that damage caused by my negligence, misuse, or failure to follow instructions is my financial responsibility. I will report faulty or damaged equipment immediately and will not use equipment I believe to be unsafe.</li>
+            <li><strong>Confidentiality and privacy:</strong> I will not share, disclose, or misuse customer information, addresses, contact details, or any business information belonging to GreenEdge Mowing. This obligation continues after I cease working with the crew.</li>
+            <li><strong>Termination:</strong> I understand that GreenEdge Mowing may terminate my involvement with the crew at any time, for any reason, with or without notice. I may also choose to stop working with the crew at any time by notifying the team.</li>
+            <li><strong>Photo and media consent:</strong> I consent to GreenEdge Mowing taking photographs or video of work sites for promotional, training, or quality purposes. I understand that my image may appear in such media and I waive any right to compensation for this use.</li>
+            <li><strong>Non-competition while engaged:</strong> While actively working with the GreenEdge Crew, I will not solicit GreenEdge customers for personal gain, start a competing mowing business using GreenEdge resources or customer lists, or otherwise undermine the business.</li>
+            <li><strong>Indemnification:</strong> I agree to indemnify and hold harmless GreenEdge Mowing, its owners, and affiliates from any claims, damages, losses, or expenses arising from my actions, negligence, or breach of these terms.</li>
+            <li><strong>Payment terms:</strong> I understand that payment is made monthly in person at a designated location. I am responsible for ensuring my contact details are up to date so I can receive payment notifications. If I miss a payment collection, it is my responsibility to arrange an alternative with the team.</li>
+            <li><strong>Right to refuse unsafe work:</strong> I have the right to refuse any job I reasonably believe to be unsafe or beyond my capability. I agree to communicate such concerns to the team promptly.</li>
+            <li><strong>Governing law and disputes:</strong> These terms are governed by the laws of Queensland, Australia. Any dispute arising from these terms will first be attempted to be resolved through good-faith negotiation.</li>
+            <li><strong>Entire agreement:</strong> These terms represent the entire agreement between me and GreenEdge Mowing regarding my engagement as a crew member, superseding any prior discussions or representations.</li>
+           </ol>
+          </div>
+         <div class="checkbox-group">
+          <input type="checkbox" id="terms-agree" name="termsAgree" required>
+          <label for="terms-agree">I have read and agree to the Crew Terms &amp; Conditions above.</label>
+         </div>
+         <p class="error-message" id="error-terms">You must agree to the terms and conditions to continue.</p>
+        </div>
+
+        <div class="mt-8">
+         <button type="submit" id="submit-btn" class="ui-action w-full py-4 rounded-full font-semibold text-lg transition-all hover:opacity-90" style="background-color: #166534; color: #ffffff;">
+          <span class="button-spinner" aria-hidden="true"></span>
+          <span class="button-text">Submit Application</span>
+         </button>
+        </div>
+       </form>
+      </div>
+
+      <!-- Thank you scene -->
+      <div id="thankyou-scene" class="thankyou-scene">
+       <div style="position: relative;">
+        <span class="floating-grass fg-1"></span>
+        <span class="floating-grass fg-2"></span>
+        <span class="floating-grass fg-3"></span>
+        <span class="floating-grass fg-4"></span>
+        <span class="floating-grass fg-5"></span>
+        <div class="thankyou-circle">
+         <svg class="thankyou-check" viewBox="0 0 24 24">
+          <path d="M5 13l4 4L19 7"/>
+         </svg>
+        </div>
+       </div>
+       <h2 class="font-heading font-bold text-2xl md:text-4xl mb-3" style="color: #166534;">Thanks for joining the crew!</h2>
+       <p class="text-lg max-w-md mx-auto" style="color: #374151;">Your application has been sent. We will review it and get back to you within <strong>2 weeks maximum</strong>.</p>
+       <a href="index.html" class="ui-action inline-block px-8 py-3 rounded-full font-semibold transition-all hover:opacity-90 mt-8" style="background-color: #166534; color: #ffffff;">
+        <span class="relative z-10">Back to Home</span>
+       </a>
+      </div>
+     </div>
+
+     <p class="disclaimer-text">*depending on how many jobs you do</p>
+    </section>
+
+    <footer class="px-6 py-8 text-center" style="color: #6b7280;">
+     <p class="text-sm">&copy; 2025 GreenEdge Mowing. All rights reserved.</p>
+    </footer>
+   </div>
+  </div>
+
+  <script>
+   (function() {
+    var form = document.getElementById('crew-signup-form');
+    var formPanel = document.getElementById('signup-form-panel');
+    var thankyouScene = document.getElementById('thankyou-scene');
+    var formCard = document.getElementById('form-card');
+    var submitBtn = document.getElementById('submit-btn');
+    var modal = document.getElementById('location-modal');
+    var modalYes = document.getElementById('modal-yes');
+    var modalNo = document.getElementById('modal-no');
+    var modalDeclineMsg = document.getElementById('modal-decline-msg');
+    var pendingSubmission = false;
+
+    function showError(id) {
+     var el = document.getElementById(id);
+     var inputId = id.replace('error-', '');
+     var input = document.getElementById(inputId);
+     if (el) el.classList.add('is-visible');
+     if (input) input.classList.add('is-invalid');
+    }
+
+    function clearErrors() {
+     document.querySelectorAll('.error-message').forEach(function(el) {
+      el.classList.remove('is-visible');
+     });
+     document.querySelectorAll('.form-input').forEach(function(el) {
+      el.classList.remove('is-invalid');
+     });
+    }
+
+    function getCheckedAvailability() {
+     var boxes = document.querySelectorAll('input[name="availability"]:checked');
+     var values = [];
+     boxes.forEach(function(box) {
+      values.push(box.value);
+     });
+     return values;
+    }
+
+    function validateEmail(email) {
+     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function setLoading(isLoading) {
+     if (isLoading) {
+      submitBtn.classList.add('is-loading');
+      submitBtn.querySelector('.button-text').textContent = 'Sending...';
+     } else {
+      submitBtn.classList.remove('is-loading');
+      submitBtn.querySelector('.button-text').textContent = 'Submit Application';
+     }
+    }
+
+    function showModal() {
+     modalDeclineMsg.classList.remove('is-visible');
+     modal.classList.add('is-visible');
+     modal.setAttribute('aria-hidden', 'false');
+    }
+
+    function hideModal() {
+     modal.classList.remove('is-visible');
+     modal.setAttribute('aria-hidden', 'true');
+    }
+
+    modalYes.addEventListener('click', function() {
+     hideModal();
+     if (pendingSubmission) {
+      doSubmit();
+     }
+    });
+
+    modalNo.addEventListener('click', function() {
+     modalDeclineMsg.classList.add('is-visible');
+    });
+
+    function doSubmit() {
+      setLoading(true);
+
+      var fullName = document.getElementById('fullName').value.trim();
+      var email = document.getElementById('email').value.trim();
+      var age = document.getElementById('age').value.trim();
+      var suburb = document.getElementById('suburb').value.trim();
+      var experience = document.getElementById('experience').value.trim();
+      var reason = document.getElementById('reason').value.trim();
+      var availability = getCheckedAvailability();
+
+      var mailtoBody = 'Hi GreenEdge Team,' + '%0D%0A' +
+        '%0D%0A' +
+        'I would like to apply to join the GreenEdge Crew.' + '%0D%0A' +
+        '%0D%0A' +
+        'Full Name: ' + encodeURIComponent(fullName) + '%0D%0A' +
+        'Email: ' + encodeURIComponent(email) + '%0D%0A' +
+        'Age: ' + encodeURIComponent(age) + '%0D%0A' +
+        'Suburb / Area: ' + encodeURIComponent(suburb) + '%0D%0A' +
+        'Availability: ' + encodeURIComponent(availability.join(', ')) + '%0D%0A' +
+        'Prior Experience: ' + encodeURIComponent(experience || 'None provided') + '%0D%0A' +
+        'Why I want to join: ' + encodeURIComponent(reason) + '%0D%0A';
+
+      var mailtoUrl = 'mailto:greenedgemowing00@gmail.com' +
+        '?subject=' + encodeURIComponent('Crew Signup Application - ' + fullName) +
+        '&body=' + mailtoBody;
+
+      window.location.href = mailtoUrl;
+
+      setLoading(false);
+      formPanel.classList.add('is-hidden');
+      thankyouScene.classList.add('is-visible');
+      formCard.style.border = '2px solid #bbf7d0';
+    }
+
+    form.addEventListener('submit', function(e) {
+     e.preventDefault();
+     clearErrors();
+
+     var isValid = true;
+     var fullName = document.getElementById('fullName').value.trim();
+     var email = document.getElementById('email').value.trim();
+     var age = document.getElementById('age').value.trim();
+     var suburb = document.getElementById('suburb').value.trim();
+     var reason = document.getElementById('reason').value.trim();
+     var termsAgree = document.getElementById('terms-agree').checked;
+     var availability = getCheckedAvailability();
+
+     if (!fullName) {
+      showError('error-fullName');
+      isValid = false;
+     }
+     if (!email || !validateEmail(email)) {
+      showError('error-email');
+      isValid = false;
+     }
+     if (!age || parseInt(age, 10) < 10 || parseInt(age, 10) > 99) {
+      showError('error-age');
+      isValid = false;
+     }
+     if (!suburb) {
+      showError('error-suburb');
+      isValid = false;
+     }
+     if (availability.length === 0) {
+      showError('error-availability');
+      isValid = false;
+     }
+     if (!reason) {
+      showError('error-reason');
+      isValid = false;
+     }
+     if (!termsAgree) {
+      showError('error-terms');
+      isValid = false;
+     }
+
+     if (!isValid) return;
+
+     pendingSubmission = true;
+     showModal();
+    });
+   })();
+  </script>
+ </body>
+</html>

@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="GreenEdge Crew Portal - Access your schedule, payment status and team roster.">
+  <meta property="og:title" content="GreenEdge Crew Portal">
+  <meta property="og:description" content="Access your schedule, payment status and team roster.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="GREENEDGE%20LOGO.png">
+  <link rel="icon" type="image/png" href="GREENEDGE%20LOGO.png">
+  <title>GreenEdge Crew Portal</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green-50: #f0fdf4;
+      --green-100: #dcfce7;
+      --green-200: #bbf7d0;
+      --green-400: #4ade80;
+      --green-600: #16a34a;
+      --green-700: #15803d;
+      --green-800: #166534;
+      --green-900: #14532d;
+      --ink-700: #374151;
+      --ink-500: #6b7280;
+      --white: #ffffff;
+      --panel-shadow: 0 22px 55px rgba(21, 128, 61, 0.12);
+      --panel-shadow-strong: 0 28px 70px rgba(15, 23, 42, 0.16);
+      --button-shadow: 0 16px 30px rgba(21, 128, 61, 0.18);
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: var(--green-50);
+      color: var(--ink-700);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .font-heading { font-family: 'Sora', sans-serif; }
+    .font-body { font-family: 'DM Sans', sans-serif; }
+
+    .page-shell {
+      position: relative;
+      width: 100%;
+      min-height: 100vh;
+      overflow-x: hidden;
+      isolation: isolate;
+    }
+
+    .page-canvas {
+      position: relative;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.92), transparent 34%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(240, 253, 244, 0.92) 24%, rgba(236, 253, 245, 1) 100%);
+    }
+
+    .grass-pattern {
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 50 Q12 35 10 20 Q8 35 10 50' fill='%2322c55e' opacity='0.1'/%3E%3Cpath d='M30 55 Q32 40 30 25 Q28 40 30 55' fill='%2322c55e' opacity='0.08'/%3E%3Cpath d='M50 50 Q52 35 50 20 Q48 35 50 50' fill='%2322c55e' opacity='0.1'/%3E%3C/svg%3E");
+    }
+
+    /* Login overlay */
+    .login-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      background:
+        radial-gradient(circle at top, rgba(255, 255, 255, 0.95), rgba(240, 253, 244, 0.96) 38%, rgba(220, 252, 231, 0.98) 100%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(220, 252, 231, 0.96));
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    .login-overlay.is-hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .login-card {
+      width: min(420px, 100%);
+      padding: 2.5rem 2rem;
+      border: 1px solid rgba(34, 197, 94, 0.18);
+      border-radius: 2rem;
+      background: rgba(255, 255, 255, 0.86);
+      backdrop-filter: blur(12px);
+      box-shadow: var(--panel-shadow-strong);
+      text-align: center;
+    }
+
+    .login-mark {
+      position: relative;
+      width: 72px;
+      height: 72px;
+      border-radius: 1.6rem;
+      background: linear-gradient(160deg, var(--green-800), var(--green-600));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 16px 30px rgba(21, 128, 61, 0.22);
+      margin: 0 auto 1.5rem;
+      overflow: hidden;
+    }
+
+    .login-mark::before,
+    .login-mark::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(74, 222, 128, 0.94), rgba(220, 252, 231, 0.9));
+    }
+
+    .login-mark::before {
+      left: 18px;
+      bottom: 14px;
+      width: 14px;
+      height: 32px;
+      transform: rotate(-7deg);
+    }
+
+    .login-mark::after {
+      right: 16px;
+      bottom: 12px;
+      width: 16px;
+      height: 38px;
+      transform: rotate(9deg);
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border: 2px solid #e5e7eb;
+      border-radius: 0.75rem;
+      font-size: 1rem;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--ink-700);
+      background: #ffffff;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--green-400);
+      box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.2);
+    }
+
+    .form-input.is-invalid {
+      border-color: #dc2626;
+    }
+
+    .form-input.is-invalid:focus {
+      box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.2);
+    }
+
+    .error-msg {
+      color: #dc2626;
+      margin-top: 8px;
+      font-size: 0.875rem;
+      display: none;
+    }
+
+    .error-msg.is-visible {
+      display: block;
+    }
+
+    /* Cards */
+    .card-hover {
+      position: relative;
+      overflow: hidden;
+      background: var(--white);
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      box-shadow: var(--panel-shadow);
+      transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
+
+    .card-hover:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 28px 65px rgba(21, 128, 61, 0.16);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .section-header h2 {
+      margin: 0;
+      color: var(--green-800);
+      font-size: 1.4rem;
+      font-weight: 700;
+      font-family: 'Sora', sans-serif;
+    }
+
+    .ui-action {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      transform: translateZ(0);
+      box-shadow: var(--button-shadow);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.2s ease, filter 0.25s ease;
+      cursor: pointer;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+    }
+
+    .ui-action:hover {
+      box-shadow: 0 22px 38px rgba(21, 128, 61, 0.16);
+      filter: saturate(1.02);
+    }
+
+    .ui-action:active {
+      transform: translateY(1px) scale(0.99);
+    }
+
+    .ui-action:focus-visible {
+      outline: 3px solid rgba(134, 239, 172, 0.55);
+      outline-offset: 3px;
+    }
+
+    .btn-primary {
+      background: var(--green-700);
+      color: var(--white);
+      padding: 0.75rem 1.5rem;
+      border-radius: 999px;
+      font-size: 1rem;
+    }
+
+    .btn-primary:hover {
+      background: var(--green-800);
+    }
+
+    .btn-small {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      border-radius: 0.75rem;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--green-700);
+      border: 2px solid var(--green-200);
+      padding: 0.5rem 1rem;
+      border-radius: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-outline:hover {
+      background: var(--green-50);
+    }
+
+    .btn-danger {
+      background: #dc2626;
+      color: var(--white);
+      padding: 0.5rem 1rem;
+      border-radius: 0.75rem;
+      font-size: 0.875rem;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .btn-danger:hover {
+      background: #b91c1c;
+    }
+
+    .payment-banner {
+      background: linear-gradient(135deg, var(--green-800), var(--green-600));
+      color: var(--white);
+      text-align: center;
+      padding: 1.5rem;
+      border-radius: 1.5rem;
+      margin-bottom: 1.5rem;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: var(--button-shadow);
+    }
+
+    .payment-banner:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 22px 38px rgba(21, 128, 61, 0.22);
+    }
+
+    .payment-banner h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
+      font-family: 'Sora', sans-serif;
+    }
+
+    .payment-banner p {
+      margin: 0.5rem 0 0;
+      opacity: 0.9;
+    }
+
+    .avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--green-100);
+      color: var(--green-800);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+      font-family: 'Sora', sans-serif;
+    }
+
+    .crew-card {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 1rem;
+      border-bottom: 1px solid var(--green-100);
+    }
+
+    .crew-card:last-child {
+      border-bottom: none;
+    }
+
+    .crew-info {
+      flex: 1;
+    }
+
+    .crew-name {
+      font-weight: 700;
+      color: var(--ink-700);
+      font-size: 1.05rem;
+    }
+
+    .crew-meta {
+      font-size: 0.9rem;
+      color: var(--ink-500);
+      margin-top: 0.15rem;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .status-paid {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .status-pending {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .amount-due {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--green-800);
+      font-family: 'Sora', sans-serif;
+    }
+
+    /* Payment table */
+    .payment-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .payment-table th,
+    .payment-table td {
+      text-align: left;
+      padding: 0.9rem 0.75rem;
+      border-bottom: 1px solid var(--green-100);
+    }
+
+    .payment-table th {
+      color: var(--ink-500);
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .payment-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    @media (max-width: 640px) {
+      .payment-table th,
+      .payment-table td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    .schedule-item {
+      padding: 1rem;
+      border-bottom: 1px solid var(--green-100);
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    .schedule-item:hover {
+      background-color: rgba(240, 253, 244, 0.6);
+    }
+
+    .schedule-item:last-child {
+      border-bottom: none;
+    }
+
+    .schedule-summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .schedule-details {
+      display: none;
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px dashed var(--green-200);
+    }
+
+    .schedule-item.is-expanded .schedule-details {
+      display: block;
+    }
+
+    .schedule-date {
+      font-weight: 700;
+      color: var(--green-800);
+      font-size: 0.95rem;
+    }
+
+    .schedule-desc {
+      color: var(--ink-500);
+      font-size: 0.9rem;
+    }
+
+    .crew-tag {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: var(--green-100);
+      color: var(--green-800);
+      margin-left: 0.5rem;
+    }
+
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+    }
+
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .checkbox-group:hover {
+      background: rgba(34, 197, 94, 0.06);
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 1.1rem;
+      height: 1.1rem;
+      accent-color: var(--green-600);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .checkbox-group label {
+      font-size: 0.95rem;
+      color: var(--ink-700);
+      cursor: pointer;
+      margin: 0;
+      font-weight: 500;
+    }
+
+    .balance-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .balance-row input {
+      width: 80px;
+      padding: 0.35rem 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    /* Notification banner */
+    .notification-banner {
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      border: 2px solid #fbbf24;
+      border-radius: 1rem;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .notification-banner::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 5px;
+      background: #f59e0b;
+      border-radius: 1rem 0 0 1rem;
+    }
+
+    .notification-banner h3 {
+      margin: 0 0 0.75rem;
+      color: #92400e;
+      font-size: 1.1rem;
+      font-family: 'Sora', sans-serif;
+    }
+
+    .notification-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px dashed rgba(146, 64, 14, 0.15);
+    }
+
+    .notification-item:last-child {
+      border-bottom: none;
+    }
+
+    .notification-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #f59e0b;
+      margin-top: 0.35rem;
+      flex-shrink: 0;
+    }
+
+    .notification-text {
+      color: #78350f;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .notification-text strong {
+      color: #92400e;
+    }
+
+    /* Crew select overlay */
+    .crew-select-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .crew-select-btn {
+      padding: 0.85rem 1rem;
+      border: 2px solid var(--green-200);
+      border-radius: 0.75rem;
+      background: #ffffff;
+      color: var(--ink-700);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+    }
+
+    .crew-select-btn:hover {
+      background: var(--green-50);
+      border-color: var(--green-400);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 2.5rem;
+      color: var(--ink-500);
+    }
+
+    .edit-form {
+      display: none;
+      background: var(--green-50);
+      border: 2px dashed var(--green-200);
+      border-radius: 1rem;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+
+    body.is-editing .edit-form {
+      display: block;
+    }
+
+    body.is-editing .edit-controls {
+      display: inline-flex;
+    }
+
+    .edit-controls {
+      display: none;
+      gap: 0.5rem;
+    }
+
+    .edit-badge {
+      display: none;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      background: var(--green-100);
+      color: var(--green-800);
+    }
+
+    body.is-editing .edit-badge {
+      display: inline-block;
+    }
+
+    .edit-link {
+      font-size: 0.875rem;
+      color: var(--ink-500);
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      transition: background 0.2s;
+    }
+
+    .edit-link:hover {
+      background: rgba(0,0,0,0.04);
+      color: var(--ink-700);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 150;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      background: rgba(15, 23, 42, 0.55);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+
+    .modal-overlay.is-visible {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .modal-panel {
+      width: min(520px, 100%);
+      max-height: 90vh;
+      overflow: auto;
+      border-radius: 1.5rem;
+      background: var(--white);
+      box-shadow: 0 30px 80px rgba(15, 23, 42, 0.28);
+      transform: scale(0.96);
+      transition: transform 0.25s ease;
+    }
+
+    .modal-overlay.is-visible .modal-panel {
+      transform: scale(1);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--green-100);
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      color: var(--green-800);
+      font-size: 1.25rem;
+      font-family: 'Sora', sans-serif;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--ink-500);
+      line-height: 1;
+      padding: 0.25rem;
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.35rem;
+      font-weight: 600;
+      color: var(--ink-700);
+      font-size: 0.9rem;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="password"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--green-200);
+      border-radius: 0.75rem;
+      font-size: 1rem;
+      font-family: inherit;
+      color: var(--ink-700);
+      background: #ffffff;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--green-600);
+      box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Payment info box */
+    .info-box {
+      background: var(--green-50);
+      border: 1px solid var(--green-200);
+      border-radius: 1rem;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .info-box p {
+      margin: 0.25rem 0;
+      font-size: 0.95rem;
+      color: var(--ink-700);
+    }
+
+    .info-box strong {
+      color: var(--green-800);
+    }
+
+    @media (max-width: 640px) {
+      .crew-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+      }
+
+      .schedule-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body class="font-body">
+  <!-- Login Overlay -->
+  <div id="login-overlay" class="login-overlay" aria-hidden="false">
+    <div class="login-card">
+      <div class="login-mark"></div>
+      <h2 class="font-heading font-bold text-2xl mb-2" style="color: #166534;">Crew Portal</h2>
+      <p class="text-sm mb-6" style="color: #6b7280;">Enter the crew password to access the portal.</p>
+      <div>
+        <input type="password" id="login-password" class="form-input" placeholder="Enter password" onkeydown="if(event.key==='Enter')document.getElementById('login-btn').click()">
+        <p class="error-msg" id="login-error">Incorrect password. Please try again.</p>
+      </div>
+      <button id="login-btn" class="ui-action btn-primary w-full mt-4">Unlock Portal</button>
+      <p class="text-xs mt-4" style="color: #9ca3af;">This area is restricted to GreenEdge Crew members only.</p>
+    </div>
+  </div>
+
+  <!-- Crew Selection Overlay -->
+  <div id="crew-select-overlay" class="login-overlay is-hidden" aria-hidden="true">
+    <div class="login-card">
+      <div class="login-mark"></div>
+      <h2 class="font-heading font-bold text-2xl mb-2" style="color: #166534;">Who are you?</h2>
+      <p class="text-sm mb-4" style="color: #6b7280;">Select your name from the crew roster below.</p>
+      <div class="crew-select-grid" id="crew-select-list">
+        <p style="color: #9ca3af; font-size: 0.9rem;">No crew members available.</p>
+      </div>
+      <p class="text-xs mt-4" style="color: #9ca3af;">Not on the list? Contact greenedgemowing00@gmail.com</p>
+    </div>
+  </div>
+
+  <!-- Admin Edit Password Modal -->
+  <div class="modal-overlay" id="adminModal">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <h3>Admin Access</h3>
+        <button class="modal-close" data-close>&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="color: var(--ink-500); margin-top: 0;">Enter the admin password to unlock editing features.</p>
+        <div class="form-group">
+          <label for="adminPassword">Password</label>
+          <input type="password" id="adminPassword" placeholder="Enter password" onkeydown="if(event.key==='Enter')document.getElementById('unlockAdmin').click()">
+        </div>
+        <button class="ui-action btn-primary w-full" id="unlockAdmin">Unlock</button>
+        <div class="error-msg" id="adminError">Incorrect password.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment Info Modal -->
+  <div class="modal-overlay" id="paymentModal">
+    <div class="modal-panel">
+      <div class="modal-header">
+        <h3>Monthly Payment Details</h3>
+        <button class="modal-close" data-close>&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="info-box">
+          <p><strong>Payment Cycle:</strong> Monthly (end of each month)</p>
+          <p><strong>Location:</strong> <span id="payment-location">To be confirmed</span></p>
+          <p><strong>Date:</strong> <span id="payment-date">To be confirmed</span></p>
+          <p><strong>Time:</strong> <span id="payment-time">To be confirmed</span></p>
+        </div>
+        <p style="color: var(--ink-500);">You will receive an email before each payment date with the final meet-up details. If you have any questions or need to reschedule, get in touch as soon as possible.</p>
+        <div class="edit-form" style="margin-top: 1rem;">
+          <h4 style="margin-top: 0; color: var(--green-800); font-size: 1rem;">Edit Payment Info</h4>
+          <div class="form-group">
+            <label for="edit-location">Location</label>
+            <input type="text" id="edit-location" placeholder="e.g. Ashgrove Park">
+          </div>
+          <div class="form-group">
+            <label for="edit-date">Date</label>
+            <input type="text" id="edit-date" placeholder="e.g. Last Saturday of the month">
+          </div>
+          <div class="form-group">
+            <label for="edit-time">Time</label>
+            <input type="text" id="edit-time" placeholder="e.g. 10:00 AM">
+          </div>
+          <button class="ui-action btn-primary btn-small" id="savePaymentInfo">Save Payment Info</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="page-shell w-full min-h-full" id="main-content" style="display: none;">
+    <div class="page-canvas min-h-full grass-pattern" style="background-color: #f0fdf4;">
+      <div class="max-w-4xl mx-auto px-6 py-12">
+         <!-- Header -->
+         <div class="text-center mb-10">
+           <div class="text-center mb-4">
+             <div style="width: 56px; height: 56px; border-radius: 50%; overflow: hidden; display: inline-block; margin-bottom: 0.75rem;">
+              <img src="GREENEDGE%20LOGO.png" alt="GreenEdge" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+             </div>
+             <h1 class="font-heading font-bold text-3xl md:text-4xl" style="color: #166534;">GreenEdge Crew Portal</h1>
+           </div>
+           <p class="text-lg" style="color: #6b7280;">Welcome, crew member. View your schedule, payment status, and team roster below.</p>
+           <p class="text-sm mt-2" style="color: #6b7280;">Questions? Email us at <a href="mailto:greenedgemowing00@gmail.com" style="color: #166534; font-weight: 600; text-decoration: none;">greenedgemowing00@gmail.com</a></p>
+         </div>
+
+         <!-- My Jobs Notification -->
+        <div id="my-jobs-banner" class="notification-banner" style="display: none;">
+          <h3>Your Upcoming Jobs</h3>
+          <div id="my-jobs-list"></div>
+        </div>
+
+         <!-- Payment Banner -->
+        <div class="payment-banner" id="paymentBanner">
+          <h2>Monthly Payment</h2>
+          <p>Tap for payment location, date, and time details</p>
+        </div>
+
+        <!-- Crew Roster -->
+        <div class="card-hover mb-6">
+          <div class="section-header">
+            <div>
+              <h2>Crew Roster</h2>
+              <span class="edit-badge">Editing</span>
+            </div>
+          </div>
+          <div class="edit-form">
+            <h4 style="margin-top: 0; color: var(--green-800); font-size: 1rem;">Add Crew Member</h4>
+            <div class="form-group">
+              <label for="crewName">Name</label>
+              <input type="text" id="crewName" placeholder="Full name">
+            </div>
+            <button class="ui-action btn-primary btn-small" id="addCrewBtn">Add Crew Member</button>
+          </div>
+          <div id="crewList">
+            <div class="empty-state">No crew members added yet.</div>
+          </div>
+        </div>
+
+        <!-- Job Schedule -->
+        <div class="card-hover mb-6">
+          <div class="section-header">
+            <div>
+              <h2>Job Schedule</h2>
+              <span class="edit-badge">Editing</span>
+            </div>
+          </div>
+          <div class="edit-form">
+            <h4 style="margin-top: 0; color: var(--green-800); font-size: 1rem;">Add Job</h4>
+            <div class="form-group">
+              <label for="jobDate">Date</label>
+              <input type="date" id="jobDate">
+            </div>
+            <div class="form-group">
+              <label for="jobTime">Time</label>
+              <input type="text" id="jobTime" placeholder="e.g., 9:00 AM">
+            </div>
+            <div class="form-group">
+              <label for="jobLocation">Location / Address</label>
+              <input type="text" id="jobLocation" placeholder="e.g., 42 Maple Street, Ashgrove">
+            </div>
+            <div class="form-group">
+              <label for="jobDesc">Description</label>
+              <input type="text" id="jobDesc" placeholder="e.g., Smith Residence - Regular Mow">
+            </div>
+            <div class="form-group">
+              <label>Assign To</label>
+              <div class="checkbox-grid" id="jobAssignCheckboxes">
+                <p style="color: var(--ink-500); font-size: 0.9rem; margin: 0;">No crew members available.</p>
+              </div>
+            </div>
+            <button class="ui-action btn-primary btn-small" id="addJobBtn">Add Job</button>
+          </div>
+          <div id="scheduleList">
+            <div class="empty-state">No jobs scheduled yet.</div>
+          </div>
+        </div>
+
+        <!-- Payment History -->
+        <div class="card-hover mb-6">
+          <div class="section-header">
+            <div>
+              <h2>Payment Status</h2>
+              <span class="edit-badge">Editing</span>
+            </div>
+          </div>
+          <div class="info-box">
+            <p><strong id="currentMonthLabel">Payment Cycle</strong></p>
+            <p>All crew members are paid in person at the same time. Tap the banner above for meet-up details. Balances accumulate until payment day.</p>
+          </div>
+          <div class="edit-form" style="text-align: center;">
+            <button class="ui-action btn-primary btn-small" id="markAllPaidBtn" style="width: 100%;">Mark All as Paid (Reset Balances)</button>
+            <p style="margin: 0.75rem 0 0; font-size: 0.85rem; color: var(--ink-500);">This resets all balances to $0. No real money is transferred.</p>
+          </div>
+          <div id="paymentList">
+            <div class="empty-state">No crew members to display.</div>
+          </div>
+        </div>
+
+         <!-- Footer -->
+         <div class="page-footer text-center">
+           <button class="edit-link" id="toggleEdit">edit?</button>
+           <p class="text-sm mt-4" style="color: #9ca3af;">&copy; 2025 GreenEdge Mowing. Crew Portal.</p>
+           <p class="text-sm mt-1" style="color: #9ca3af;">Contact: <a href="mailto:greenedgemowing00@gmail.com" style="color: #166534; text-decoration: none;">greenedgemowing00@gmail.com</a></p>
+         </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      function _d(a,k){return a.map(function(c){return String.fromCharCode(c^k)}).join('')}
+      const _p=_d([61,40,63,63,52,63,62,61,63,55,53,45,51,52,61,107,104,105,110],0x5A);
+      const _a=_d([42,59,41,41,45,53,40,62,107,104,105,110],0x5A);
+
+      function loadData() {
+        let crew = JSON.parse(localStorage.getItem('ge_crew') || '[]');
+        let jobs = JSON.parse(localStorage.getItem('ge_jobs') || '[]');
+        const paymentInfo = JSON.parse(localStorage.getItem('ge_payment_info') || '{"location":"To be confirmed","date":"To be confirmed","time":"To be confirmed"}');
+
+        // Migrate old crew data: monthlyRate -> balance
+        crew.forEach(c => {
+          if (c.monthlyRate !== undefined && c.balance === undefined) {
+            c.balance = c.monthlyRate;
+            delete c.monthlyRate;
+          }
+          if (c.balance === undefined) c.balance = 0;
+        });
+
+        // Migrate old job data: assign string -> assignees array
+        jobs.forEach(j => {
+          if (j.assign !== undefined && !j.assignees) {
+            j.assignees = j.assign ? [String(j.assign)] : [];
+            delete j.assign;
+          }
+          if (!j.assignees) j.assignees = [];
+        });
+
+        return { crew, jobs, paymentInfo };
+      }
+
+      function saveCrew(crew) {
+        localStorage.setItem('ge_crew', JSON.stringify(crew));
+      }
+
+      function saveJobs(jobs) {
+        localStorage.setItem('ge_jobs', JSON.stringify(jobs));
+      }
+
+      function savePaymentInfo(info) {
+        localStorage.setItem('ge_payment_info', JSON.stringify(info));
+      }
+
+      // Login state
+      const isLoggedIn = sessionStorage.getItem('ge_crew_logged_in') === 'true';
+      const myCrewId = sessionStorage.getItem('ge_my_crew_id');
+      let isEditing = sessionStorage.getItem('ge_edit_mode') === 'true';
+
+      const loginOverlay = document.getElementById('login-overlay');
+      const crewSelectOverlay = document.getElementById('crew-select-overlay');
+      const mainContent = document.getElementById('main-content');
+      const loginPassword = document.getElementById('login-password');
+      const loginBtn = document.getElementById('login-btn');
+      const loginError = document.getElementById('login-error');
+
+      function showCrewSelect() {
+        loginOverlay.classList.add('is-hidden');
+        loginOverlay.setAttribute('aria-hidden', 'true');
+        crewSelectOverlay.classList.remove('is-hidden');
+        crewSelectOverlay.setAttribute('aria-hidden', 'false');
+        renderCrewSelect();
+      }
+
+      function showMainContent() {
+        crewSelectOverlay.classList.add('is-hidden');
+        crewSelectOverlay.setAttribute('aria-hidden', 'true');
+        mainContent.style.display = '';
+        sessionStorage.setItem('ge_crew_logged_in', 'true');
+      }
+
+      function renderCrewSelect() {
+        const { crew } = loadData();
+        const list = document.getElementById('crew-select-list');
+        if (crew.length === 0) {
+          list.innerHTML = '<p style="color: #9ca3af; font-size: 0.9rem;">No crew members available yet. Ask an admin to add you.</p>';
+          return;
+        }
+        list.innerHTML = crew.map(c => `
+          <button class="crew-select-btn" data-crew-id="${c.id}">
+            <span style="font-weight: 700;">${escapeHtml(c.name)}</span>
+          </button>
+        `).join('');
+
+        list.querySelectorAll('.crew-select-btn').forEach(btn => {
+          btn.addEventListener('click', function() {
+            sessionStorage.setItem('ge_my_crew_id', btn.getAttribute('data-crew-id'));
+            showMainContent();
+            renderAll();
+          });
+        });
+      }
+
+      if (isLoggedIn && myCrewId) {
+        showMainContent();
+      } else if (isLoggedIn) {
+        showCrewSelect();
+      }
+
+      loginBtn.addEventListener('click', function() {
+        if (loginPassword.value === _p) {
+          showCrewSelect();
+        } else {
+          loginPassword.classList.add('is-invalid');
+          loginError.classList.add('is-visible');
+        }
+      });
+
+      loginPassword.addEventListener('input', function() {
+        loginPassword.classList.remove('is-invalid');
+        loginError.classList.remove('is-visible');
+      });
+
+      // Modals
+      function openModal(id) {
+        document.getElementById(id).classList.add('is-visible');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeModal(id) {
+        document.getElementById(id).classList.remove('is-visible');
+        document.body.style.overflow = '';
+      }
+
+      document.querySelectorAll('.modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', function(e) {
+          if (e.target === overlay || e.target.closest('[data-close]')) {
+            closeModal(overlay.id);
+          }
+        });
+      });
+
+      // Payment banner
+      document.getElementById('paymentBanner').addEventListener('click', function() {
+        renderPaymentInfo();
+        openModal('paymentModal');
+      });
+
+      function renderPaymentInfo() {
+        const { paymentInfo } = loadData();
+        document.getElementById('payment-location').textContent = paymentInfo.location || 'To be confirmed';
+        document.getElementById('payment-date').textContent = paymentInfo.date || 'To be confirmed';
+        document.getElementById('payment-time').textContent = paymentInfo.time || 'To be confirmed';
+        document.getElementById('edit-location').value = paymentInfo.location || '';
+        document.getElementById('edit-date').value = paymentInfo.date || '';
+        document.getElementById('edit-time').value = paymentInfo.time || '';
+      }
+
+      document.getElementById('savePaymentInfo').addEventListener('click', function() {
+        const info = {
+          location: document.getElementById('edit-location').value.trim() || 'To be confirmed',
+          date: document.getElementById('edit-date').value.trim() || 'To be confirmed',
+          time: document.getElementById('edit-time').value.trim() || 'To be confirmed'
+        };
+        savePaymentInfo(info);
+        renderPaymentInfo();
+        alert('Payment information updated.');
+      });
+
+      document.getElementById('currentMonthLabel').textContent = "Crew Payment Cycle";
+
+      function setEditMode(enabled) {
+        isEditing = enabled;
+        sessionStorage.setItem('ge_edit_mode', String(enabled));
+        document.body.classList.toggle('is-editing', enabled);
+        const btn = document.getElementById('toggleEdit');
+        btn.textContent = enabled ? 'done editing' : 'edit?';
+        renderAll();
+      }
+
+      document.getElementById('toggleEdit').addEventListener('click', function() {
+        if (isEditing) {
+          setEditMode(false);
+        } else {
+          document.getElementById('adminPassword').value = '';
+          document.getElementById('adminError').classList.remove('is-visible');
+          openModal('adminModal');
+          setTimeout(() => document.getElementById('adminPassword').focus(), 100);
+        }
+      });
+
+      document.getElementById('unlockAdmin').addEventListener('click', function() {
+        const input = document.getElementById('adminPassword');
+        if (input.value === _a) {
+          closeModal('adminModal');
+          setEditMode(true);
+        } else {
+          document.getElementById('adminError').classList.add('is-visible');
+        }
+      });
+
+      function renderAll() {
+        renderMyJobs();
+        renderCrew();
+        renderSchedule();
+        renderPayments();
+        populateAssignDropdown();
+      }
+
+      function renderMyJobs() {
+        const myId = sessionStorage.getItem('ge_my_crew_id');
+        const banner = document.getElementById('my-jobs-banner');
+        const list = document.getElementById('my-jobs-list');
+
+        if (!myId) {
+          banner.style.display = 'none';
+          return;
+        }
+
+        const { crew, jobs } = loadData();
+        const me = crew.find(c => String(c.id) === String(myId));
+        if (!me) {
+          banner.style.display = 'none';
+          return;
+        }
+
+        const now = new Date();
+        now.setHours(0,0,0,0);
+
+        const myJobs = jobs
+          .filter(j => j.assignees && j.assignees.includes(String(myId)))
+          .filter(j => new Date(j.date + 'T00:00:00') >= now)
+          .sort((a,b) => new Date(a.date) - new Date(b.date));
+
+        if (myJobs.length === 0) {
+          banner.style.display = 'none';
+          return;
+        }
+
+        banner.style.display = 'block';
+        list.innerHTML = myJobs.map(job => `
+          <div class="notification-item">
+            <div class="notification-dot"></div>
+            <div class="notification-text">
+              <strong>${escapeHtml(job.description)}</strong> on ${formatDate(job.date)}${job.time ? ' at ' + escapeHtml(job.time) : ''}${job.location ? ' — ' + escapeHtml(job.location) : ''}
+            </div>
+          </div>
+        `).join('');
+      }
+
+      function renderCrew() {
+        const { crew, jobs } = loadData();
+        const list = document.getElementById('crewList');
+        if (crew.length === 0) {
+          list.innerHTML = '<div class="empty-state">No crew members added yet.</div>';
+          return;
+        }
+
+        const now = new Date();
+        now.setHours(0,0,0,0);
+
+        list.innerHTML = crew.map(person => {
+          const myJobs = jobs
+            .filter(j => j.assignees && j.assignees.includes(String(person.id)))
+            .filter(j => new Date(j.date + 'T00:00:00') >= now)
+            .sort((a,b) => new Date(a.date) - new Date(b.date));
+          const nextJob = myJobs[0];
+          const initials = person.name.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+          const balance = person.balance || 0;
+          return `
+            <div class="crew-card">
+              <div class="avatar">${initials}</div>
+              <div class="crew-info">
+                <div class="crew-name">${escapeHtml(person.name)}</div>
+                <div class="crew-meta">${nextJob ? 'Next job: ' + formatDate(nextJob.date) + ' - ' + escapeHtml(nextJob.description) : 'No upcoming jobs'}</div>
+                ${isEditing ? `
+                  <div class="balance-row">
+                    <span style="font-size: 0.85rem; color: var(--ink-500);">Balance: $${balance}</span>
+                    <input type="number" class="form-input" id="add-balance-${person.id}" placeholder="Add $" min="0" style="width: 90px; padding: 0.3rem 0.5rem; font-size: 0.85rem;">
+                    <button class="ui-action btn-primary btn-small" data-action="add-balance" data-id="${person.id}" style="padding: 0.35rem 0.75rem; font-size: 0.8rem;">Add</button>
+                  </div>
+                ` : `<div class="crew-meta" style="margin-top: 0.25rem; font-weight: 600; color: var(--green-800);">Balance owed: $${balance}</div>`}
+              </div>
+              ${isEditing ? `<div class="edit-controls"><button class="btn-danger btn-small" data-action="delete-crew" data-id="${person.id}">Remove</button></div>` : ''}
+            </div>
+          `;
+        }).join('');
+      }
+
+      function renderSchedule() {
+        const { jobs, crew } = loadData();
+        const list = document.getElementById('scheduleList');
+        if (jobs.length === 0) {
+          list.innerHTML = '<div class="empty-state">No jobs scheduled yet.</div>';
+          return;
+        }
+        const sorted = [...jobs].sort((a,b) => new Date(a.date) - new Date(b.date));
+        list.innerHTML = sorted.map(job => {
+          const assignNames = getCrewNames(job.assignees);
+          const dayName = new Date(job.date + 'T00:00:00').toLocaleDateString(undefined, { weekday: 'long' });
+          return `
+            <div class="schedule-item" data-job-id="${job.id}">
+              <div class="schedule-summary">
+                <div>
+                  <div class="schedule-date">${escapeHtml(job.description)}</div>
+                  <div class="schedule-desc">${assignNames.length > 0 ? 'Crew: ' + escapeHtml(assignNames.join(', ')) : 'Unassigned'}</div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <span style="font-size: 0.8rem; color: var(--ink-500); white-space: nowrap;">${formatDate(job.date)}</span>
+                  <span style="font-size: 0.75rem; color: var(--green-600);">&#9662;</span>
+                  ${isEditing ? `<button class="btn-danger btn-small" data-action="delete-job" data-id="${job.id}" style="margin-left: 0.5rem;">Delete</button>` : ''}
+                </div>
+              </div>
+              <div class="schedule-details">
+                <p style="margin: 0.25rem 0; font-size: 0.9rem; color: var(--ink-700);"><strong>Date:</strong> ${formatDate(job.date)} (${dayName})</p>
+                <p style="margin: 0.25rem 0; font-size: 0.9rem; color: var(--ink-700);"><strong>Time:</strong> ${escapeHtml(job.time || 'Not set')}</p>
+                <p style="margin: 0.25rem 0; font-size: 0.9rem; color: var(--ink-700);"><strong>Location:</strong> ${escapeHtml(job.location || 'Not set')}</p>
+                <p style="margin: 0.25rem 0; font-size: 0.9rem; color: var(--ink-700);"><strong>Description:</strong> ${escapeHtml(job.description)}</p>
+                <p style="margin: 0.25rem 0; font-size: 0.9rem; color: var(--ink-700);"><strong>Assigned:</strong> ${assignNames.length > 0 ? escapeHtml(assignNames.join(', ')) : 'Unassigned'}</p>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        // Add click handlers for expansion
+        list.querySelectorAll('.schedule-item').forEach(item => {
+          item.addEventListener('click', function(e) {
+            if (e.target.closest('button') || e.target.closest('a')) return;
+            item.classList.toggle('is-expanded');
+          });
+        });
+      }
+
+      function renderPayments() {
+        const { crew } = loadData();
+        const list = document.getElementById('paymentList');
+        if (crew.length === 0) {
+          list.innerHTML = '<div class="empty-state">No crew members to display.</div>';
+          return;
+        }
+
+        const rows = crew.map(p => {
+          const balance = p.balance || 0;
+          const isPaid = balance === 0;
+          return `
+            <tr>
+              <td><strong>${escapeHtml(p.name)}</strong></td>
+              <td class="amount-due">$${balance}</td>
+              <td><span class="status-badge ${isPaid ? 'status-paid' : 'status-pending'}">${isPaid ? 'Paid Up' : 'Pending'}</span></td>
+              ${isEditing ? `<td><button class="btn-outline btn-small" data-action="toggle-payment" data-id="${p.id}">${isPaid ? 'Reset' : 'Mark Paid'}</button></td>` : ''}
+            </tr>
+          `;
+        }).join('');
+
+        list.innerHTML = `
+          <table class="payment-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Balance Owed</th>
+                <th>Status</th>
+                ${isEditing ? '<th>Action</th>' : ''}
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        `;
+      }
+
+      function getCrewNames(ids) {
+        if (!ids || ids.length === 0) return [];
+        const { crew } = loadData();
+        return ids.map(id => {
+          const person = crew.find(c => String(c.id) === String(id));
+          return person ? person.name : '';
+        }).filter(n => n);
+      }
+
+      function formatDate(dateStr) {
+        const d = new Date(dateStr + 'T00:00:00');
+        return d.toLocaleDateString(undefined, { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
+      }
+
+      function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+      }
+
+      function populateAssignDropdown() {
+        const { crew } = loadData();
+        const container = document.getElementById('jobAssignCheckboxes');
+        if (crew.length === 0) {
+          container.innerHTML = '<p style="color: var(--ink-500); font-size: 0.9rem; margin: 0;">No crew members available.</p>';
+          return;
+        }
+        container.innerHTML = crew.map(c => `
+          <div class="checkbox-group">
+            <input type="checkbox" id="job-assign-${c.id}" value="${c.id}" name="jobAssignees">
+            <label for="job-assign-${c.id}">${escapeHtml(c.name)}</label>
+          </div>
+        `).join('');
+      }
+
+      document.getElementById('addCrewBtn').addEventListener('click', function() {
+        const name = document.getElementById('crewName').value.trim();
+        if (!name) {
+          alert('Please enter a name.');
+          return;
+        }
+        const { crew } = loadData();
+        crew.push({ id: Date.now(), name, balance: 0 });
+        saveCrew(crew);
+        document.getElementById('crewName').value = '';
+        renderAll();
+      });
+
+      document.getElementById('addJobBtn').addEventListener('click', function() {
+        const date = document.getElementById('jobDate').value;
+        const time = document.getElementById('jobTime').value.trim();
+        const location = document.getElementById('jobLocation').value.trim();
+        const desc = document.getElementById('jobDesc').value.trim();
+        const checkedBoxes = document.querySelectorAll('input[name="jobAssignees"]:checked');
+        const assignees = Array.from(checkedBoxes).map(cb => cb.value);
+        if (!date || !desc) {
+          alert('Please enter both a date and description.');
+          return;
+        }
+        const { jobs } = loadData();
+        jobs.push({ id: Date.now(), date, time, location, description: desc, assignees });
+        saveJobs(jobs);
+        document.getElementById('jobDate').value = '';
+        document.getElementById('jobTime').value = '';
+        document.getElementById('jobLocation').value = '';
+        document.getElementById('jobDesc').value = '';
+        checkedBoxes.forEach(cb => cb.checked = false);
+        renderAll();
+      });
+
+      document.getElementById('markAllPaidBtn').addEventListener('click', function() {
+        const { crew } = loadData();
+        crew.forEach(c => {
+          c.balance = 0;
+        });
+        saveCrew(crew);
+        renderAll();
+      });
+
+      // Event delegation for edit actions
+      document.addEventListener('click', function(e) {
+        const btn = e.target.closest('[data-action]');
+        if (!btn) return;
+
+        const action = btn.getAttribute('data-action');
+        const id = parseInt(btn.getAttribute('data-id'), 10);
+
+        if (action === 'delete-crew') {
+          if (!confirm('Remove this crew member?')) return;
+          let { crew, jobs } = loadData();
+          crew = crew.filter(c => c.id !== id);
+          jobs.forEach(j => {
+            j.assignees = (j.assignees || []).filter(aid => String(aid) !== String(id));
+          });
+          saveCrew(crew);
+          saveJobs(jobs);
+          renderAll();
+        }
+
+        if (action === 'delete-job') {
+          if (!confirm('Delete this job?')) return;
+          let { jobs } = loadData();
+          jobs = jobs.filter(j => j.id !== id);
+          saveJobs(jobs);
+          renderAll();
+        }
+
+        if (action === 'toggle-payment') {
+          const { crew } = loadData();
+          const person = crew.find(c => c.id === id);
+          if (person) {
+            person.balance = (person.balance || 0) > 0 ? 0 : 0; // Always reset to 0 when clicked
+            saveCrew(crew);
+            renderAll();
+          }
+        }
+
+        if (action === 'add-balance') {
+          const input = document.getElementById('add-balance-' + id);
+          const amount = parseFloat(input.value);
+          if (!amount || amount <= 0) {
+            alert('Please enter a valid amount to add.');
+            return;
+          }
+          const { crew } = loadData();
+          const person = crew.find(c => c.id === id);
+          if (person) {
+            person.balance = (person.balance || 0) + amount;
+            saveCrew(crew);
+            renderAll();
+          }
+        }
+      });
+
+      // Init
+      if (isLoggedIn) {
+        if (isEditing) {
+          document.body.classList.add('is-editing');
+          document.getElementById('toggleEdit').textContent = 'done editing';
+        }
+        renderAll();
+      }
+    })();
+  </script>
+</body>
+</html>
