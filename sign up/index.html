@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="h-full">
+<html lang="en">
  <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,34 +36,31 @@
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
    }
-   body {
-    min-height: 100%;
-    margin: 0;
-    overflow-x: hidden;
-    background-color: #f0fdf4;
-    color: var(--ink-700);
-    -webkit-font-smoothing: antialiased;
-   }
+  body {
+   margin: 0;
+   overflow-x: hidden;
+   background-color: #f0fdf4;
+   color: var(--ink-700);
+   -webkit-font-smoothing: antialiased;
+  }
    ::selection {
     background: rgba(74, 222, 128, 0.25);
     color: var(--green-900);
    }
    .font-heading { font-family: 'Sora', sans-serif; }
    .font-body { font-family: 'DM Sans', sans-serif; }
-   .page-shell {
-    position: relative;
-    width: 100%;
-    min-height: 100%;
-    overflow-x: hidden;
-    isolation: isolate;
-   }
-   .page-canvas {
-    position: relative;
-    min-height: 100%;
-    background:
-     radial-gradient(circle at top, rgba(255, 255, 255, 0.92), transparent 34%),
-     linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(240, 253, 244, 0.92) 24%, rgba(236, 253, 245, 1) 100%);
-   }
+  .page-shell {
+   position: relative;
+   width: 100%;
+   overflow-x: hidden;
+   isolation: isolate;
+  }
+  .page-canvas {
+   position: relative;
+   background:
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.92), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(240, 253, 244, 0.92) 24%, rgba(236, 253, 245, 1) 100%);
+  }
    .page-canvas::before,
    .page-canvas::after {
     content: "";
@@ -427,7 +424,7 @@
    }
   </style>
  </head>
- <body class="h-full font-body">
+  <body class="font-body">
   <div class="page-shell w-full min-h-full">
    <div class="page-canvas min-h-full grass-pattern" style="background-color: #f0fdf4;">
 
