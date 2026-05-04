@@ -658,6 +658,11 @@
       padding: 0.5rem 1rem;
       border-radius: 0.5rem;
       transition: background 0.2s;
+      display: none;
+    }
+
+    body.is-admin .edit-link {
+      display: inline-block;
     }
 
     .edit-link:hover {
@@ -809,7 +814,7 @@
     <div class="login-card">
       <div class="login-mark"></div>
       <h2 class="font-heading font-bold text-2xl mb-2" style="color: #166534;">Crew Portal</h2>
-      <p class="text-sm mb-6" style="color: #6b7280;">Enter the crew password to access the portal.</p>
+       <p class="text-sm mb-6" style="color: #6b7280;">Enter the crew password or admin password to access the portal.</p>
       <div>
         <input type="password" id="login-password" class="form-input" placeholder="Enter password" onkeydown="if(event.key==='Enter')document.getElementById('login-btn').click()">
         <p class="error-msg" id="login-error">Incorrect password. Please try again.</p>
@@ -829,25 +834,6 @@
         <p style="color: #9ca3af; font-size: 0.9rem;">No crew members available.</p>
       </div>
       <p class="text-xs mt-4" style="color: #9ca3af;">Not on the list? Contact greenedgemowing00@gmail.com</p>
-    </div>
-  </div>
-
-  <!-- Admin Edit Password Modal -->
-  <div class="modal-overlay" id="adminModal">
-    <div class="modal-panel">
-      <div class="modal-header">
-        <h3>Admin Access</h3>
-        <button class="modal-close" data-close>&times;</button>
-      </div>
-      <div class="modal-body">
-        <p style="color: var(--ink-500); margin-top: 0;">Enter the admin password to unlock editing features.</p>
-        <div class="form-group">
-          <label for="adminPassword">Password</label>
-          <input type="password" id="adminPassword" placeholder="Enter password" onkeydown="if(event.key==='Enter')document.getElementById('unlockAdmin').click()">
-        </div>
-        <button class="ui-action btn-primary w-full" id="unlockAdmin">Unlock</button>
-        <div class="error-msg" id="adminError">Incorrect password.</div>
-      </div>
     </div>
   </div>
 
@@ -1052,6 +1038,7 @@
       // Login state
       const isLoggedIn = sessionStorage.getItem('ge_crew_logged_in') === 'true';
       const myCrewId = sessionStorage.getItem('ge_my_crew_id');
+      const isAdmin = sessionStorage.getItem('ge_is_admin') === 'true';
       let isEditing = sessionStorage.getItem('ge_edit_mode') === 'true';
 
       const loginOverlay = document.getElementById('login-overlay');
@@ -1076,6 +1063,15 @@
         sessionStorage.setItem('ge_crew_logged_in', 'true');
       }
 
+      function activateAdmin() {
+        sessionStorage.setItem('ge_is_admin', 'true');
+        sessionStorage.removeItem('ge_my_crew_id');
+        showMainContent();
+        setAdminMode(true);
+        setEditMode(true);
+        renderAll();
+      }
+
       function renderCrewSelect() {
         const { crew } = loadData();
         const list = document.getElementById('crew-select-list');
@@ -1098,14 +1094,19 @@
         });
       }
 
-      if (isLoggedIn && myCrewId) {
+      if (isLoggedIn && isAdmin) {
+        showMainContent();
+      } else if (isLoggedIn && myCrewId) {
         showMainContent();
       } else if (isLoggedIn) {
         showCrewSelect();
       }
 
       loginBtn.addEventListener('click', function() {
-        if (loginPassword.value === _p) {
+        const entered = loginPassword.value.trim();
+        if (entered === 'password1234') {
+          activateAdmin();
+        } else if (entered === _p) {
           showCrewSelect();
         } else {
           loginPassword.classList.add('is-invalid');
@@ -1175,24 +1176,16 @@
         renderAll();
       }
 
+      function setAdminMode(enabled) {
+        document.body.classList.toggle('is-admin', enabled);
+      }
+
       document.getElementById('toggleEdit').addEventListener('click', function() {
+        if (!sessionStorage.getItem('ge_is_admin')) return;
         if (isEditing) {
           setEditMode(false);
         } else {
-          document.getElementById('adminPassword').value = '';
-          document.getElementById('adminError').classList.remove('is-visible');
-          openModal('adminModal');
-          setTimeout(() => document.getElementById('adminPassword').focus(), 100);
-        }
-      });
-
-      document.getElementById('unlockAdmin').addEventListener('click', function() {
-        const input = document.getElementById('adminPassword');
-        if (input.value.trim() === _a) {
-          closeModal('adminModal');
           setEditMode(true);
-        } else {
-          document.getElementById('adminError').classList.add('is-visible');
         }
       });
 
@@ -1209,7 +1202,7 @@
         const banner = document.getElementById('my-jobs-banner');
         const list = document.getElementById('my-jobs-list');
 
-        if (!myId) {
+        if (!myId || sessionStorage.getItem('ge_is_admin') === 'true') {
           banner.style.display = 'none';
           return;
         }
@@ -1500,6 +1493,9 @@
 
       // Init
       if (isLoggedIn) {
+        if (isAdmin) {
+          setAdminMode(true);
+        }
         if (isEditing) {
           document.body.classList.add('is-editing');
           document.getElementById('toggleEdit').textContent = 'done editing';
