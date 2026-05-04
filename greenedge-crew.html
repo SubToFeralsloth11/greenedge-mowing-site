@@ -1188,7 +1188,7 @@
 
       document.getElementById('unlockAdmin').addEventListener('click', function() {
         const input = document.getElementById('adminPassword');
-        if (input.value === _a) {
+        if (input.value.trim() === _a) {
           closeModal('adminModal');
           setEditMode(true);
         } else {

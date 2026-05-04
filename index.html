@@ -3014,15 +3014,15 @@
        closeModal(adminJobsModal);
       });
 
-      adminPasswordSubmit.addEventListener("click", function () {
-       if (adminPasswordInput.value === "password1234") {
-        closeModal(adminPasswordModal);
-        renderJobs();
-        openModal(adminJobsModal);
-       } else {
-        adminPasswordError.classList.add("is-visible");
-       }
-      });
+       adminPasswordSubmit.addEventListener("click", function () {
+        if (adminPasswordInput.value.trim() === "password1234") {
+         closeModal(adminPasswordModal);
+         renderJobs();
+         openModal(adminJobsModal);
+        } else {
+         adminPasswordError.classList.add("is-visible");
+        }
+       });
 
       adminPasswordInput.addEventListener("keydown", function (e) {
        if (e.key === "Enter") {
