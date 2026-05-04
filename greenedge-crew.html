@@ -1090,6 +1090,8 @@
       }
 
       function showMainContent() {
+        loginOverlay.classList.add('is-hidden');
+        loginOverlay.setAttribute('aria-hidden', 'true');
         crewSelectOverlay.classList.add('is-hidden');
         crewSelectOverlay.setAttribute('aria-hidden', 'true');
         mainContent.style.display = '';
