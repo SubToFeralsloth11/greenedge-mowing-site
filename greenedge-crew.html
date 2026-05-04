@@ -39,6 +39,28 @@
       -webkit-text-size-adjust: 100%;
     }
 
+    /* Performance: promote animated layers to their own compositor layers. */
+    .login-overlay,
+    .login-card,
+    .card-hover,
+    .modal-overlay,
+    .modal-panel,
+    .crew-select-btn,
+    .ui-action,
+    .schedule-item,
+    .payment-banner,
+    .notification-banner {
+      will-change: transform, opacity;
+      transform: translateZ(0);
+    }
+
+    /* Performance: contain layout to reduce paint areas. */
+    .card-hover,
+    .login-card,
+    .modal-panel {
+      contain: layout paint;
+    }
+
     body {
       font-family: 'DM Sans', sans-serif;
       margin: 0;
@@ -1068,11 +1090,17 @@
         localStorage.setItem('ge_payment_info', JSON.stringify(info));
       }
 
+      // Reset login state on every page load so the password must be re-entered.
+      sessionStorage.removeItem('ge_crew_logged_in');
+      sessionStorage.removeItem('ge_my_crew_id');
+      sessionStorage.removeItem('ge_is_admin');
+      sessionStorage.removeItem('ge_edit_mode');
+
       // Login state
-      const isLoggedIn = sessionStorage.getItem('ge_crew_logged_in') === 'true';
-      const myCrewId = sessionStorage.getItem('ge_my_crew_id');
-      const isAdmin = sessionStorage.getItem('ge_is_admin') === 'true';
-      let isEditing = sessionStorage.getItem('ge_edit_mode') === 'true';
+      const isLoggedIn = false;
+      const myCrewId = null;
+      const isAdmin = false;
+      let isEditing = false;
 
       const loginOverlay = document.getElementById('login-overlay');
       const crewSelectOverlay = document.getElementById('crew-select-overlay');
@@ -1086,7 +1114,7 @@
         loginOverlay.setAttribute('aria-hidden', 'true');
         crewSelectOverlay.classList.remove('is-hidden');
         crewSelectOverlay.setAttribute('aria-hidden', 'false');
-        renderCrewSelect();
+        renderCrewSelect(loadData());
       }
 
       function showMainContent() {
@@ -1107,8 +1135,8 @@
         renderAll();
       }
 
-      function renderCrewSelect() {
-        const { crew } = loadData();
+      function renderCrewSelect(data) {
+        const { crew } = data || loadData();
         const list = document.getElementById('crew-select-list');
         if (crew.length === 0) {
           list.innerHTML = '<p style="color: #9ca3af; font-size: 0.9rem;">No crew members available yet. Ask an admin to add you.</p>';
@@ -1234,14 +1262,15 @@
       });
 
       function renderAll() {
-        renderMyJobs();
-        renderCrew();
-        renderSchedule();
-        renderPayments();
-        populateAssignDropdown();
+        const data = loadData();
+        renderMyJobs(data);
+        renderCrew(data);
+        renderSchedule(data);
+        renderPayments(data);
+        populateAssignDropdown(data);
       }
 
-      function renderMyJobs() {
+      function renderMyJobs(data) {
         const myId = sessionStorage.getItem('ge_my_crew_id');
         const banner = document.getElementById('my-jobs-banner');
         const list = document.getElementById('my-jobs-list');
@@ -1251,7 +1280,7 @@
           return;
         }
 
-        const { crew, jobs } = loadData();
+        const { crew, jobs } = data;
         const me = crew.find(c => String(c.id) === String(myId));
         if (!me) {
           banner.style.display = 'none';
@@ -1282,8 +1311,8 @@
         `).join('');
       }
 
-      function renderCrew() {
-        const { crew, jobs } = loadData();
+      function renderCrew(data) {
+        const { crew, jobs } = data;
         const list = document.getElementById('crewList');
         if (crew.length === 0) {
           list.innerHTML = '<div class="empty-state">No crew members added yet.</div>';
@@ -1321,8 +1350,8 @@
         }).join('');
       }
 
-      function renderSchedule() {
-        const { jobs, crew } = loadData();
+      function renderSchedule(data) {
+        const { jobs } = data;
         const list = document.getElementById('scheduleList');
         if (jobs.length === 0) {
           list.innerHTML = '<div class="empty-state">No jobs scheduled yet.</div>';
@@ -1330,7 +1359,7 @@
         }
         const sorted = [...jobs].sort((a,b) => new Date(a.date) - new Date(b.date));
         list.innerHTML = sorted.map(job => {
-          const assignNames = getCrewNames(job.assignees);
+          const assignNames = getCrewNames(job.assignees, data);
           const dayName = new Date(job.date + 'T00:00:00').toLocaleDateString(undefined, { weekday: 'long' });
           return `
             <div class="schedule-item" data-job-id="${job.id}">
@@ -1365,8 +1394,8 @@
         });
       }
 
-      function renderPayments() {
-        const { crew } = loadData();
+      function renderPayments(data) {
+        const { crew } = data;
         const list = document.getElementById('paymentList');
         if (crew.length === 0) {
           list.innerHTML = '<div class="empty-state">No crew members to display.</div>';
@@ -1401,9 +1430,9 @@
         `;
       }
 
-      function getCrewNames(ids) {
+      function getCrewNames(ids, data) {
         if (!ids || ids.length === 0) return [];
-        const { crew } = loadData();
+        const { crew } = data || loadData();
         return ids.map(id => {
           const person = crew.find(c => String(c.id) === String(id));
           return person ? person.name : '';
@@ -1421,8 +1450,8 @@
         return div.innerHTML;
       }
 
-      function populateAssignDropdown() {
-        const { crew } = loadData();
+      function populateAssignDropdown(data) {
+        const { crew } = data || loadData();
         const container = document.getElementById('jobAssignCheckboxes');
         if (crew.length === 0) {
           container.innerHTML = '<p style="color: var(--ink-500); font-size: 0.9rem; margin: 0;">No crew members available.</p>';
